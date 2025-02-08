@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { TestGuard } from './test.guard';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private readonly configService: ConfigService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -13,6 +15,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(TestGuard)
   findAll() {
     return this.usersService.findAll();
   }
