@@ -84,3 +84,142 @@ Bài 43: Fix bugs và tổng kết
 * Thư viện convert từ string sang milliseconds
 npm i --save-exact ms@2.1.3
 npm i --save-dev @types/ms
+
+Chương 9: Tư duy phân tích database
+Bài 44: Giới thiệu đề bài
+Đăng tin tuyển dụng, việc làm => Kết hợp phân quyền
+- Ứng viên có thể tìm việc làm theo skill.
+- Nhà tuyển dụng có thể đăng việc làm.
+- Đặt lịch (schedule) gửi mail cho subscribers.
+Phân tích chi tiết chức năng:
+- Đăng kí, đăng nhập (basic: local).
+- Tạo skills để search.
+- Nhà tuyển dụng: thông tin giới thiệu về công ty.
+- Ứng viên: người có thể xem bài đăng tuyển dụng và gửi CV.
+- Admin: duyệt CV rồi mới gửi tới nhà tuyển dụng.
+- Nếu 1 ứng viên subscribe 1 skilss => gửi mail hàng toàn về những jobs này.
+
+Bài 45: Phân tích model và relationship:
+1. Đối tượng
+Actors: (người sử dụng hệ thống)
+- Ứng viên (employee).
+- Nhà tuyển dụng: company.
+- Admin.
+
+Đối tượng khác:
+- CV của ứng viên
+- Jobs đăng tuyển.
+- Skill để search
+- Role: vai trò của user trong hệ thống (admin, hr,...).
+- Permission: quyền hạn sử dụng hệ thống - ám chỉ api của backend.
+
+2. Relationship:
+- 1 ứng viên: n cv
+- 1 nhà tuyển dụng: n jobs.
+- n skills: n jobs.
+
+về phân quyền:
+1 permission (quyền hạn) ám chỉ 1 apis của backend.
+1 role (vai trò) bao gồm nhiều quyền hạn.
+1 người dùng sẽ có 1 role duy nhất, nếu muốn merge role => tạo role mới.
+
+1 users -> có 1 role.
+1 role có thể có nhiều users có cùng role này.
+
+1 role -> có nhiều permissions (apis).
+1 permission -> có thể thuộc nhiều role khác nhau.
+
+Bài 46: Thiết kế model
+1. Users (admin, ứng viên, nhân viên cty -> phân biệt nhờ role)
+- name: string
+- email: string <unique>
+- password: string
+- age: number
+- gender: string
+- address: string
+- company: object (_id, name)
+- role: string
+- refreshToken: string
+
+- createdAt: Data
+- updatedAt: Date
+- isDeleted: boolean
+- createdBy: object(_id, email)
+- updatedBy: object(_id, email)
+- deleteBy: object(_id, email)
+
+2. Companies
+- name: string
+- address: string
+- description: string <html>
+
+- createdAt: Data
+- updatedAt: Date
+- isDeleted: boolean
+- createdBy: object(_id, email)
+- updatedBy: object(_id, email)
+- deleteBy: object(_id, email)
+
+3. Resume (CV)
+- email: string
+- userId: objectId
+- url: string
+- status: string //PENDING-REVIEWING-APPROVED-REJECTED
+- history: array object [{status: string, updatedAt:Date, updatedBy: {_id, email}}]
+
+- createdAt: Data
+- updatedAt: Date
+- isDeleted: boolean
+- createdBy: object(_id, email)
+- updatedBy: object(_id, email)
+- deleteBy: object(_id, email)
+
+4. Jobs
+- name: string
+- skill: string[]
+- company: string
+- location: string
+- salary: string
+- quantity: string (số lượng ứng tuyển)
+- level: string //INTERN/FRESHER/JUNIOR/SENIOR
+- description: string <html>
+- startDate: Date
+- endDate: Date
+- isActive: Boolean
+
+- createdAt: Data
+- updatedAt: Date
+- isDeleted: boolean
+- createdBy: object(_id, email)
+- updatedBy: object(_id, email)
+- deleteBy: object(_id, email)
+
+5. Subscribers
+- email: string
+- skill: string
+
+6. Roles
+- name: string <unique>
+- description: string
+- isActive: boolean
+- permission: array object
+
+- createdAt: Data
+- updatedAt: Date
+- isDeleted: boolean
+- createdBy: object(_id, email)
+- updatedBy: object(_id, email)
+- deleteBy: object(_id, email)
+
+7. Permission
+- name: string
+- path: string
+- method: string
+- description: string
+
+- createdAt: Data
+- updatedAt: Date
+- isDeleted: boolean
+- createdBy: object(_id, email)
+- updatedBy: object(_id, email)
+- deleteBy: object(_id, email)
