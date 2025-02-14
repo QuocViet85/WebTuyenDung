@@ -223,3 +223,31 @@ Bài 46: Thiết kế model
 - createdBy: object(_id, email)
 - updatedBy: object(_id, email)
 - deleteBy: object(_id, email)
+
+Chương 10: Mongoose Plugins
+Bài 47: Timestamps plugin
+- Khai báo @Schema({timestamps: true}) để có timestamps (createdAt, updatedAt).
+
+Bài 48: Soft-delete plugin
+Cài đặt: npm i soft-delete-plugin-mongoose
+Plugin soft-delete sẽ thêm 2 trường là: deletedAt và isDeleted
+
+Bài 49: Query Builder
+Thư viện Query Builder để phân trang: npm i --save api-query-params
+
+//
+Bài 50: Setup dự án FrontEnd
+Github dự án FrontEnd: https://github.com/haryphamdev/react-for-nest.
+//
+Đang chuyên tâm học BackEnd và chưa học Framework FrontEnd nên sẽ dùng Postman thay FrontEnd để thao tác với BackEnd.
+
+Bài 52: Setup CORS Nestjs
+Thêm đoạn code sau vào file main.js:
+  app.enableCors(
+    {
+      "origin": "*",
+      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "preflightContinue": false,
+    }
+  );
+
