@@ -251,3 +251,10 @@ Thêm đoạn code sau vào file main.js:
     }
   );
 
+Chương 11: Modules Company
+Bài 53: Generate Modules Company
+Bài 54: Bài tập Create Company
+Bài 55: Update User Type (JWT)
+Bài 56: Passing Req.user
+- Inject Request vào Service sẽ làm hiệu năng kém đi vì Service sẽ bị chuyển scope từ Singleton thành Request dẫn đến tạo Service mới khi có Request mới thay vì chỉ sử dụng 1 Service từ đầu.
+Bài 57: Bài tập Update Company
