@@ -258,3 +258,6 @@ Bài 55: Update User Type (JWT)
 Bài 56: Passing Req.user
 - Inject Request vào Service sẽ làm hiệu năng kém đi vì Service sẽ bị chuyển scope từ Singleton thành Request dẫn đến tạo Service mới khi có Request mới thay vì chỉ sử dụng 1 Service từ đầu.
 Bài 57: Bài tập Update Company
+Bài 58: Bài tập Delete Company
+Bài 59: Query with Pagination
+* Thư viện phân trang : npm i api-query-params
