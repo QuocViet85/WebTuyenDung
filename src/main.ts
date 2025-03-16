@@ -1,9 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { TransformInterceptor } from './core/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -22,6 +23,18 @@ async function bootstrap() {
       "preflightContinue": false,
     }
   );
+
+  //đăng kí sử dụng Interceptors trên toàn ứng dụng
+  const reflector = app.get(Reflector);
+  app.useGlobalInterceptors(new TransformInterceptor(reflector));
+
+  //config versioning
+  app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: ['1', '2']
+  });
+
   await app.listen(configService.get<string>('PORT') ?? 3000);
 }
 bootstrap();

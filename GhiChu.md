@@ -261,3 +261,8 @@ Bài 57: Bài tập Update Company
 Bài 58: Bài tập Delete Company
 Bài 59: Query with Pagination
 * Thư viện phân trang : npm i api-query-params
+Bài 60: Giới thiệu về Interceptors
+* Interceptors là cách can thiệp vào req và res, tương tự guard - thông minh hơn middleware. Mục đích chính của Interceptor là thay đổi dữ liệu được trả về bởi function để chuẩn hóa dữ liệu gửi về client.
+* Observable khác Promise ở chỗ là Observable khi được gọi rồi thì có thể hủy được.
+Bài 61: Transform Response
+Bài 62: Version APIs
