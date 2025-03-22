@@ -266,3 +266,69 @@ Bài 60: Giới thiệu về Interceptors
 * Observable khác Promise ở chỗ là Observable khi được gọi rồi thì có thể hủy được.
 Bài 61: Transform Response
 Bài 62: Version APIs
+
+Chương 12: Modules User
+Bài 63: Update User Schema
+1. Update model
+Users (user.schema): (admin, ứng viên, nhân viên cty -> phân biệt nhờ role)
+
+2. Update dto/validation
+Validate object trong dto: https://stackoverflow.com/questions/53786383/validate-nested-objects-using-class-validator-and-nestjs
+
+Bài 64: Bài tập CRUD Users
+Các endpoint cần tạo (6 apis)
+1. POST /api/v1/auth/register
+- Không cần truyền lên JWT
+- Body: name, email, password, age, gender, address
+Ở BackEnd, hardcode role === USER & hash password trước khi lưu
+Không cần cập nhật createdBy (vì không sử dụng jwt token)
+Response: {
+  'statusCode': 201,
+  'message': 'Register a new user',
+  'data': {
+    _id: '...',
+    createdAt: '...'
+  }
+}
+
+2. POST /api/v1/users
+- Cần truyền JWT
+- Body: name, email, password, age, gender, address, role, company: object {_id, name}
+Ở BackEnd, tự động cập nhật createdBy: object {_id, email}
+Response: {
+  'statusCode': 201,
+  'message': 'Create a new User',
+  'data': {
+    '_id': '...',
+    'createdAt': '...'
+  }
+}
+
+3. PATCH /api/v1/users
+- Cần truyền lên JWT
+- Body: _id, name, email, age, gender, address, role, company, object {_id, name}
+Ở BackEnd, tự động cập nhật updatedBy: object {_id, email}
+
+4. DELETE /api/v1/users/:id
+- Cần truyền lên JWT
+Ở BackEnd, tự động cập nhật deletedBy: object {id, email} và sử dụng soft-delete
+
+Response: {
+  'statusCode': 200,
+  'message': 'Delete a User',
+  'data' { 
+    'deleted': ...
+  }
+}
+
+5. GET /api/v1/users/:id
+Fetch user by ID
+- Không cần truyền lên JWT
+
+Response: (không trả về password) => trả về full record trừ password
+
+6. GET /api/v1/users
+Fetch users with paginate
+- Cần truyền lên JWT
+
+Response: (không trả về password) => trả về full record trừ password

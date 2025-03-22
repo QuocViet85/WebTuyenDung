@@ -19,7 +19,7 @@ import { IS_PUBLIC_KEY } from 'src/decorator/customize';
         context.getClass(),
       ]);
       if (isPublic) {
-        return true;
+        return true; //không gán user vào request nữa
       }
       return super.canActivate(context);
     }
