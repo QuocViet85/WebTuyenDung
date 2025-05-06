@@ -332,3 +332,24 @@ Fetch users with paginate
 - Cần truyền lên JWT
 
 Response: (không trả về password) => trả về full record trừ password
+
+Bài 65: Chức năng login
+* Yêu cầu:
+- Đăng nhập thành công, trả ra access_token và thông tin user.
+- Lưu refresh_token vào cookies.
+
+Bài 66: API Login
+Refresh Token
+Khi login, cần tạo ra Refresh token
+- User login thành công, trước khi return accessToken, cần update thông tin user với refreshToken được tạo.
+- RefreshToken có thể lưu dưới 2 định dạng: jwt hoặc là 1 chuỗi string ngẫu nhiên => sử dụng jwt
+- Cần lưu cookies (refreshToken) cho người dùng.
+
+Bài 67: Set Cookies
+Cookie Nestjs: https://docs.nestjs.com/techniques/cookies
+- Nếu set HttpOnly = true trong cookie thì cookie chỉ đọc được ở Server mà không thể dùng JS để đọc ở Client.
+
+Bài 68: API Get Account (F5 Refresh)
+Khi user F5, cần gọi API của BackEnd, vì client không có khả năng decode (giải mã) accessToken để biết được ai là người đăng nhập
+Tạo endpoint: GET /api/v1/auth/account
+- Chỉ cần truyền lên JWT ở header.

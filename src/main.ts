@@ -5,6 +5,7 @@ import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { TransformInterceptor } from './core/transform.interceptor';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -14,6 +15,9 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views')); //view html
   app.setViewEngine('ejs');
   app.useGlobalPipes(new ValidationPipe());
+
+  //config cookie
+  app.use(cookieParser());
 
   //config cors
   app.enableCors(

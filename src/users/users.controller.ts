@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -13,8 +13,12 @@ export class UsersController {
 
   @Post()
   @ResponseMessage('Create a new user')
-  create(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
-    return this.usersService.create(createUserDto, user);
+  async create(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
+    let newUser = await this.usersService.create(createUserDto, user);
+
+    return {
+      _id: newUser._id,
+    }
   }
 
   @Get()

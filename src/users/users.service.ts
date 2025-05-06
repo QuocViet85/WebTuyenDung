@@ -1,4 +1,4 @@
-import { HttpCode, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpCode, HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -20,6 +20,12 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto, user: IUser) {
+    const isExist = await this.userModel.findOne({email: createUserDto.email});
+
+    if (isExist) {
+      throw new BadRequestException(`Email: ${createUserDto.email} đã tồn tại trên hệ thống. Vui lòng sử dụng Email khác`);
+    }
+
     createUserDto.password = this.getHashPassword(createUserDto.password);
     let newUser = await this.userModel.create({
       ...createUserDto,
@@ -32,7 +38,14 @@ export class UsersService {
   }
 
   async register(registerUserDto: RegisterUserDto) {
+    const isExist = await this.userModel.findOne({email: registerUserDto.email});
+
+    if (isExist) {
+      throw new BadRequestException(`Email: ${registerUserDto.email} đã tồn tại trên hệ thống. Vui lòng sử dụng Email khác`);
+    }
+
     registerUserDto.password = this.getHashPassword(registerUserDto.password);
+    
     let user = await this.userModel.create({
       ...registerUserDto,
       role: USER
@@ -89,5 +102,9 @@ export class UsersService {
     }else {
       return 'Not Found User';
     }
+  }
+
+  updateUserToken = async (refreshToken: string, _id: string) => {
+    return await this.userModel.updateOne({_id}, {refreshToken})
   }
 }

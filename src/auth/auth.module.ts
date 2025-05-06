@@ -18,8 +18,8 @@ import { AuthController } from './auth.controller';
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_ACCESS_TOKEN,
-      signOptions: { expiresIn: ms(process.env.JWT_ACCESS_EXPIRE) },
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      signOptions: { expiresIn: ms(process.env.JWT_ACCESS_EXPIRE) / 1000 },
     }),
   ],
   exports: [AuthService],
