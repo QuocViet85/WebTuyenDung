@@ -353,3 +353,33 @@ Bài 68: API Get Account (F5 Refresh)
 Khi user F5, cần gọi API của BackEnd, vì client không có khả năng decode (giải mã) accessToken để biết được ai là người đăng nhập
 Tạo endpoint: GET /api/v1/auth/account
 - Chỉ cần truyền lên JWT ở header.
+
+Bài 69: API Refresh Token
+1. Bài toán:
+Client sử dụng API, và khi accessToken hết hạn => server trả mã lỗi 401.
+=> Khi nhận code 401, client tự động gọi API refreshToken sử dụng token để đối lấy accessToken và refreshToken mới.
+
+2. Yêu cầu: tạo endoint
+GET api/v1/auth/refresh
+https://docs.nestjs.com/techniques/cookies
+Response trả ra giống hệt như login.
+
+3. Các bước xử lý:
+- Server lấy ra refreshToken từ cookies.
+- Server check (verify) để biết refreshToken hợp lệ không ?
+- Server query database theo refreshToken.
+=> lấy thông tin user.
+=> issue accessToken mới.
+- Server trả về phản hồi (set cookies tương ứng refreshToken mới).
+
+Bài 70: Bài tập API Logout
+Yêu cầu: tạo endpoint
+
+POST api/v1/auth/logout
+
+Truyền lên JWT ở header
+
+Xử lý ở backend:
+- Update refreshToken === null
+- Remove refreshToken ở cookies.
+- Trả về phản hồi cho client
