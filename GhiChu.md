@@ -165,6 +165,8 @@ Bài 46: Thiết kế model
 - userId: objectId
 - url: string
 - status: string //PENDING-REVIEWING-APPROVED-REJECTED
+- companyId
+- jobId
 - history: array object [{status: string, updatedAt:Date, updatedBy: {_id, email}}]
 
 - createdAt: Data
@@ -383,3 +385,117 @@ Xử lý ở backend:
 - Update refreshToken === null
 - Remove refreshToken ở cookies.
 - Trả về phản hồi cho client
+
+Chương 13: Modules JobResume
+Bài 72: Bài tập tạo Module Jobs
+1. Tạo Schema
+jobs
+- name: string
+- skill: string
+- company: object {_id, name}
+- location: string
+- salary: number
+- quantity: number
+- level: string
+- description: html<string>
+- startDate: date
+- endDate: date
+- isActive: boolean 
+
+Bài 73 + 74: CRUD Job
+
+Bài 75: Giới thiệu Upload File
+Tài liệu: https://docs.nestjs.com/techniques/file-upload
+
+1. Nguyên tắc khi upload file
+- Sử dụng POST (create new data)
+- Sử dụng form-data (xử lý file)
+- Thư viện multer (hiệu năng cao, sẵn có trong Nestjs, nên dùng): https://www.npmjs.com/package/multer
+- Thư viện upload file: https://www.npmjs.com/package/express-fileupload.
+
+2. Setup
+- Tạo service upload file: (vì sẽ sử dụng service này ở nhiều nơi)
+nest g resource files --no-spec
+
+Cài đặt thư viện: npm i -D @types/multer
+(không cần cài đặt thư viện multer, vì Nestjs đã hỗ trợ sẵn multer, cài đặt @types/multer để hỗ trợ TypeScript)
+
+FileInterceptor('fileInputname', options) => có 2 tham số đầu vào
+https://github.com/expressjs/multer#multeropts
+
+Bài 76: Validate Upload File
+
+1. Validate File
+Sử dụng cách truyền thống, tương tự như sử dụng với Expressjs và Multer:
+
+https://stackoverflow.com/questions/49096068/upload-file-using-nestjs-and-multer
+
+2. Validate File bằng Nestjs
+https://stackoverflow.com/questions/73824060/how-can-i-validate-a-file-type-using-nestjs-pipes-and-filetypevalidator
+
+Validate type của file (fileType) bằng MIME Type của file chứ KHÔNG phải extensions của file: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+
+Bài 77: Destination Upload File
+Tài liệu: https://docs.nestjs.com/techniques/file-upload#async-configuration
+
+1. Yêu cầu:
+- Cấu hình thư mục upload file (destination).
+- Thay đổi tên file khi upload thành công (tránh trường hợp bị ghi đè/mất file do tên file upload bị trùng nhau)
+
+2. Các bước thực hiện
+- Config default options: tại files modules.
+https://docs.nestjs.com/techniques/file-upload#default-options
+
+Bài 78: Bài tập Update Company with Image
+Yêu cầu:
+- Tạo thêm field: logo: string đối với model Company.
+- Sửa 2 api là create và update company, cập nhật thêm field logo: string
+
+Logic xử lý:
+1. Khi create/update company: => upload (lưu trữ) file ảnh trên server và trả về client tên ảnh đã upload thành công.
+2. BackEnd khi create/update compay, chỉ lưu vào database tên ảnh (field logo: string) và không cần xử lý logic update file vì logic này đã được xử lý trước đó thông qua api upload file.
+
+Bài 80: Bài tập tạo Modules Resumes
+nest g resource resumes --no-spec
+
+//toDo: update Create/Update DTO
+//api get company by ID
+
+Bài 81: Bài tập CRUD
+1. Create a Resume
+
+POST /api/v1/resumes
+
+Yêu cầu:
+- Cần jwt ở header.
+
+2. Fetch all resume
+GET api/v1/resumes
+
+Yêu cầu: truyền lên JWT ở header, đồng thời query string ở url
+
+3. Fetch resume by id
+GET /api/v1/resumes/id
+
+Yêu cầu:
+- Truyền động id ở url.
+- Truyền JWT ở header.
+
+4. Change status a Resume (update a resume)
+PATH /api/v1/resumes/id
+
+Yêu cầu:
+- Header truyền JWT.
+
+5. Delete Resume
+DELETE /api/v1/resumes/id
+
+Yêu cầu:
+- Header truyền JWT.
+
+6. get CV by user
+POST /api/v1/resumes/by-user 
+
+Bài 83. Fetch Data with Ref
+Thư viện: npm i --save api-query-params
+Sử dụng ref được thiết lập trong Schema để lấy dữ liệu từ bảng khác dựa vào ID gửi lên để gán vào dữ liệu trả về của bảng hiện tại. Để làm được điều này thì ngoài thiết lập ref trong Schema thì còn cần sử dụng thư viện api-query-params (Ví dụ trong module resume)

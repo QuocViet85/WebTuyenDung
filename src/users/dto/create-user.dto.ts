@@ -7,7 +7,7 @@ class Company {
     _id: mongoose.Schema.Types.ObjectId;
 
     name: string;
-  }
+}
 
 //Admin tạo người dùng
 export class CreateUserDto {
