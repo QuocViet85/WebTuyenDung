@@ -61,7 +61,8 @@ export class UsersService {
 
   findOne(id: string) {
     if (mongoose.Types.ObjectId.isValid(id)) {
-      return this.userModel.findOne({ _id: id}, { password: 0 });
+      return this.userModel.findOne({ _id: id}, { password: 0 })
+                            .populate({path: 'role', select: {_id: 1, name: 1}});
     }else {
       return 'Not Found user';
     }
@@ -70,7 +71,7 @@ export class UsersService {
   findOneByUserName(username: string) {
     return this.userModel.findOne({
       email: username
-    });
+    }).populate({path: 'role', select: {_id: 1, name: 1}});
   }
 
   isValidPassword(password: string, hash: string) {

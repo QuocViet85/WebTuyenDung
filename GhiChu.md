@@ -499,3 +499,109 @@ POST /api/v1/resumes/by-user
 Bài 83. Fetch Data with Ref
 Thư viện: npm i --save api-query-params
 Sử dụng ref được thiết lập trong Schema để lấy dữ liệu từ bảng khác dựa vào ID gửi lên để gán vào dữ liệu trả về của bảng hiện tại. Để làm được điều này thì ngoài thiết lập ref trong Schema thì còn cần sử dụng thư viện api-query-params (Ví dụ trong module resume)
+
+Chương 14: Modules
+Bài 84: 
+Sử dụng command:
+nest g resource permission --no-spec
+nest g resource role --no-spec
+
+Mô hình phân quyền:
+
+1 user => có 1 role. 1 role có n permission
+=> 1 user có n permission khi sử dụng hệ thống.
+
+Sau này muốn thay đổi permission của user, chỉ cần thay role là xong
+(update role hiện tại, hoặc tạo role mới => gán user vào)
+
+1. Model Permission (Quyền sử dụng hệ thống)
+
+Mỗi permission chính là 1 api ở BackEnd
+
+- name: string
+- apiPath: string
+- method: string
+- module: string
+- createdAt
+- updatedAt
+- deletedAt
+- isDeleted
+- createdBy: {_id, email}
+- updatedBy: {_id, email}
+- deletedBy: {_id, email}
+
+2. Model Role (vai trò trong hệ thống)
+- name: string
+- description: string
+- isActive: boolean
+- permissions: objectId[]
+- createdAt
+- updatedAt
+- deletedAt
+- isDeleted
+- createdBy: {_id, email}
+- updatedBy: {_id, email}
+- deletedBy: {_id, email}
+
+=> Lưu ý cách khai báo schema
+
+Bài 85: CRUD Permissions
+1. Create a permissions
+- Chú ý: kiểm tra xem api path và method đã tồn tại chưa
+
+Bài 87: CRUD Role
+
+Bài 90: Nest Lifecycle Event
+1. Lifecycle là gì ?
+- Vòng đời (life cycle) là quá trình ứng dụng NestJS chạy
+
+Có 3 giai đoạn chính:
+Giai đoạn 1: Intiliazing (khởi tạo), ví dụ như khởi tạo connections, DI, modules,...
+Giai đoạn 2: running (chạy thành công)
+Giai đoạn 3: terminating: trong quá trình chạy, nếu có bugs xảy ra, khiến Server bị lỗi => die
+
+2. Tại sao cần lifecycle
+- Sử dụng lifecycle để can thiệp vào quá trình chạy ứng dụng, ví dụ:
++ khi ứng dụng bị die => do something
++ khi ứng dụng chưa chạy lên => check login, init fake data
+
+3. Sử dụng với NestJS
+Mục đích: tạo init data (dữ liệu thật, không phải dữ liệu fake) cho database
+
+Trong thực tế, có 3 cách tạo data cho database:
+- Cách 1: sử dụng script của database, tức là mở database => tự thêm dữ liệu vào. Với công ty, nếu database do team khác quản lý => dev không tự làm được điều này.
+- Cách 2: cài đặt/sử dụng thư viện hỗ trợ migration/seeder(có rất ít thư viện làm điều này với Mongoose/mongodb)
+- Cách 3: tạo data init từ code => dev có thể làm
+
+Ý tưởng:
+- Mỗi lần (everytime) ứng dụng Nestjs khởi tạo, sẽ gọi function để check:
++ Để biết có dữ liệu hay chưa => dùng hàm find, hoặc hàm count
++ Nếu có dữ liệu init rồi => không làm gì cả
++ Nếu chưa có dữ liệu => tạo init data
+
+Cách làm:
+Tài liệu: https://docs.nestjs.com/fundamentals/lifecycle-events#usage
+
+nets g resouces databases --no-spec
+
+=> Không cần generate crud
+
+Viết hàm onModuleInit bên trong service. Thành phần nào của Module có hàm onModuleInit thì khi thành phần đó được khởi tạo nó sẽ tự động gọi hàm này luôn
+
+
+Bài 91: Bài tập tạo Sample Data
+
+Xóa 3 collection users, roles và permissions trong database
+
+- Mặc định 2 role: admin và user
+- Mặc định 2 user: admin và user
+- Mặc định permissions
+
+Thứ tự tạo:
+- Tạo permissions
+- Tạo role (với permisisons) được tạo ở trên
+- Tạo user với role được tạo ở trên
+
+- Cần setup tham số trong .env
+
+Logger: https://docs.nestjs.com/techniques/logger#using-the-logger-for-application-logging
